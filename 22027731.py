@@ -212,3 +212,6 @@ df_emissions = retrieve_emissions_data(indicator)
 
 # Scale the emissions using MinMaxScaler
 emissions_scaled = MinMaxScaler().fit_transform(df_emissions.fillna(0))
+
+# Scale the emissions using MinMaxScaler
+emissions_scaled = MinMaxScaler().fit_transform(df_emissions.fillna(0)
