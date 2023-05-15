@@ -236,3 +236,33 @@ cluster_2 = df_emissions[df_emissions['Cluster'] == 2]
 # Fit curve and visualize emissions trend for China in cluster 1
 xnew_china, ynew_china = fit_curve_and_visualize(
     df_emissions, cluster_labels, 1, "China")
+
+
+def reshape_and_plot_global_trend(df_emissions):
+    """
+    Reshape the emissions DataFrame and plot the global emissions trend.
+
+    Args:
+        df_emissions (pandas.DataFrame): DataFrame containing
+        the emissions data.
+    """
+    # Reshape the DataFrame using melt function
+    df_orig = pd.melt(df_emissions.reset_index(),
+                      id_vars=['Country Name', 'Cluster'],
+                      value_vars=list(df_emissions.columns), var_name='Year',
+                      value_name='Total Greenhouse Gas Emissions')
+
+    # Calculate the global greenhouse gas emissions trend by year
+    global_co2_trend = df_orig.groupby(
+        'Year')['Total Greenhouse Gas Emissions'].sum()
+
+    # Plot the global greenhouse gas emissions trend
+    plt.plot(global_co2_trend.index, global_co2_trend.values)
+    plt.gca().set_xticks(plt.gca().get_xticks()[::5])
+    plt.xlabel('Year')
+    plt.ylabel('Greenhouse Gas Emissions')
+    plt.title('Global Greenhouse Gas Emissions Trend')
+
+    # Save the plot as an image file
+    plt.savefig('Global.png', dpi=300, transparent=True)
+    plt.show()
