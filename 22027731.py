@@ -232,3 +232,7 @@ visualize_clusters(emissions_reduced_data,
 cluster_0 = df_emissions[df_emissions['Cluster'] == 0]
 cluster_1 = df_emissions[df_emissions['Cluster'] == 1]
 cluster_2 = df_emissions[df_emissions['Cluster'] == 2]
+
+# Fit curve and visualize emissions trend for China in cluster 1
+xnew_china, ynew_china = fit_curve_and_visualize(
+    df_emissions, cluster_labels, 1, "China")
