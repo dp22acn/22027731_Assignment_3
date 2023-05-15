@@ -215,3 +215,8 @@ emissions_scaled = MinMaxScaler().fit_transform(df_emissions.fillna(0))
 
 # Perform t-SNE dimensionality reduction on scaled emissions data
 emissions_reduced_data = TSNE(n_components=2).fit_transform(emissions_scaled)
+
+# Perform K-means clustering on the reduced data
+kmeans = KMeans(n_clusters=3, init="k-means++", random_state=2023)
+cluster_labels = kmeans.fit_predict(emissions_reduced_data)
+cluster_centers = kmeans.cluster_centers_
