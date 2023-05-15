@@ -135,3 +135,69 @@ def err_ranges(x, func, param, sigma):
         upper = np.maximum(upper, y)
 
     return lower, upper
+
+
+def fit_curve_and_visualize(df_emissions, cluster_labels,
+                            cluster_num, country, beta=1):
+    """
+    Fit a curve to the emissions data of a specific country in a cluster
+    and visualize it.
+
+    Args:
+        df_emissions (pandas.DataFrame): DataFrame containing
+        the emissions data.
+        cluster_labels (numpy.ndarray): Cluster labels for each data point.
+        cluster_num (int): Cluster number to consider.
+        country (str): Name of the country.
+
+    Returns:
+        numpy.ndarray: Fitted curve x values.
+        numpy.ndarray: Fitted curve y values.
+    """
+    def exponential_growth(x, a, b, c):
+        """
+   Exponential growth function for curve fitting.
+
+   Args:
+       x (numpy.ndarray): Independent variable.
+       a (float): Coefficient for linear term.
+       b (float): Coefficient for quadratic term.
+       c (float): Coefficient for constant term.
+
+   Returns:
+       numpy.ndarray: Predicted values based
+       on the exponential growth function.
+   """
+        return a * x + b * x ** 2 + c
+
+    # Extract x and y data for fitting curve in the specified
+    # cluster and country
+
+    xdata = df_emissions.loc[country][:-1].index.values.astype('int')
+    ydata = df_emissions.loc[country][:-1].values
+
+    # Perform curve fitting using exponential_growth function
+
+    popt, pcov = curve_fit(exponential_growth, xdata, ydata)
+
+    # Generate new x values for smooth curve visualization
+    xnew = np.arange(min(xdata), max(xdata) + 5, 1)
+    ynew = exponential_growth(xnew, *popt)
+    lower, upper = err_ranges(xnew, exponential_growth, popt,
+                              [0.1, 0.01, 0.001])
+
+    # Plot the best fitting function, data points, and labels
+    plt.plot(xnew, ynew, 'r-', label='Best fitting function')
+    plt.scatter(xdata, ydata, label='Data')
+    plt.fill_between(xnew, ynew-lower[0]/beta, ynew+upper[0]/beta,
+                     alpha=0.2, label='Confidence Interval')
+    plt.legend()
+    plt.xlabel('Year')
+    plt.ylabel('Greenhouse Gas emissions')
+    plt.title(f'Greenhouse Gas emissions trend for {country}')
+
+    # Save the plot as an image file
+    plt.savefig(f'{country}.png', dpi=300, transparent=True)
+    plt.show()
+
+    return xnew, ynew
