@@ -206,3 +206,6 @@ def fit_curve_and_visualize(df_emissions, cluster_labels,
 # Set the indicators and countries you want to retrieve data for
 indicator = 'EN.ATM.GHGT.KT.CE'
 name = 'Total greenhouse gas emissions'
+
+# Retrieve emissions data
+df_emissions = retrieve_emissions_data(indicator)
