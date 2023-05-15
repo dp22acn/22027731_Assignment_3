@@ -266,3 +266,34 @@ def reshape_and_plot_global_trend(df_emissions):
     # Save the plot as an image file
     plt.savefig('Global.png', dpi=300, transparent=True)
     plt.show()
+
+
+def calculate_cluster_statistics(cluster_labels, df_emissions):
+    """
+    Calculate cluster statistics.
+
+    Args:
+        cluster_labels (numpy.ndarray): Cluster labels for each data point.
+        df_emissions (pandas.DataFrame): DataFrame containing the
+        emissions data.
+
+    Returns:
+        pandas.DataFrame: DataFrame containing cluster statistics.
+    """
+    # Compute cluster sizes
+    cluster_sizes = pd.Series(cluster_labels).value_counts().sort_index()
+
+    # Compute variance of emissions within each cluster
+    variance = pd.DataFrame(df_emissions).groupby(cluster_labels).var()
+    variance_means = variance.mean(axis=1)
+
+    # Create a tabular representation of cluster statistics
+    cluster_stats = pd.DataFrame({
+        'Cluster': range(kmeans.n_clusters),
+        'Size': cluster_sizes,
+        'Centroid': cluster_centers.tolist(),
+        'Variance': variance_means.tolist(),
+    })
+    cluster_stats = cluster_stats.set_index('Cluster')
+
+    return cluster_stats
