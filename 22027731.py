@@ -223,3 +223,12 @@ cluster_centers = kmeans.cluster_centers_
 
 # Add cluster labels to the emissions DataFrame
 df_emissions['Cluster'] = cluster_labels
+
+# Visualize the clustered data using t-SNE dimensions
+visualize_clusters(emissions_reduced_data,
+                   cluster_labels, cluster_centers, name)
+
+# Filter the DataFrame for each cluster
+cluster_0 = df_emissions[df_emissions['Cluster'] == 0]
+cluster_1 = df_emissions[df_emissions['Cluster'] == 1]
+cluster_2 = df_emissions[df_emissions['Cluster'] == 2]
