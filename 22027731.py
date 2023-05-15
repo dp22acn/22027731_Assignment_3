@@ -69,3 +69,37 @@ def retrieve_emissions_data(indicator):
     ).fillna(method='ffill', axis=1)
 
     return df_emissions
+
+
+def visualize_clusters(emissions_reduced_data, cluster_labels,
+                       cluster_centers, name):
+    """
+    Visualize the clustered data using t-SNE dimensions.
+
+    Args:
+        emissions_reduced_data (numpy.ndarray): Reduced data after t-SNE
+        dimensionality reduction.
+        cluster_labels (numpy.ndarray): Cluster labels for each data point.
+        cluster_centers (numpy.ndarray): Coordinates of the cluster centers.
+        name (str): Name of the emissions data.
+    """
+    # Plot the clustered data using t-SNE dimensions
+    plt.figure(figsize=(8, 6))
+    for label in np.unique(cluster_labels):
+        plt.scatter(
+            *emissions_reduced_data[cluster_labels == label].T,
+            label=f'Cluster {label}')
+
+    # Plot the cluster centers
+    plt.scatter(*cluster_centers.T, c='red', marker='x', s=100)
+
+    # Set the plot labels and title
+    plt.xlabel('tSNE1')
+    plt.ylabel('tSNE2')
+    plt.legend()
+    plt.title(f'KMeans Clustering of {name} with 2 dimensions', fontsize=10)
+
+    # Save the plot to a file
+    plt.savefig(f'kmeans-{name.replace(" ", "")}.png',
+                dpi=600, transparent=True)
+    plt.show()
