@@ -1,3 +1,9 @@
+# -- coding: utf-8 --
+"""
+Created on Fri May 12 17:18:01 2023
+
+@author: DEVENDRA PEDDOJU
+"""
 # Importing Nessecery Libraries
 import warnings
 import matplotlib.pyplot as plt
@@ -8,6 +14,7 @@ from scipy.optimize import curve_fit
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import MinMaxScaler
+
 
 warnings.simplefilter("ignore", FutureWarning)
 
@@ -237,6 +244,10 @@ cluster_2 = df_emissions[df_emissions['Cluster'] == 2]
 xnew_china, ynew_china = fit_curve_and_visualize(
     df_emissions, cluster_labels, 1, "China")
 
+# Fit curve and visualize emissions trend for Germany in cluster 1
+xnew_germany, ynew_germany = fit_curve_and_visualize(
+    df_emissions, cluster_labels, 1, "Germany", beta=16)
+
 
 def reshape_and_plot_global_trend(df_emissions):
     """
@@ -297,3 +308,13 @@ def calculate_cluster_statistics(cluster_labels, df_emissions):
     cluster_stats = cluster_stats.set_index('Cluster')
 
     return cluster_stats
+
+
+# Reshape the DataFrame and plot the global emissions trend
+reshape_and_plot_global_trend(df_emissions)
+
+# Calculate cluster statistics
+cluster_stats = calculate_cluster_statistics(cluster_labels, df_emissions)
+
+# Save cluster statistics to a CSV file
+cluster_stats.to_csv("stats.csv")
